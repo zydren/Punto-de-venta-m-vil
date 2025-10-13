@@ -474,15 +474,367 @@ class ProductosCompanion extends UpdateCompanion<Producto> {
   }
 }
 
+class $ProveedoresTable extends Proveedores
+    with TableInfo<$ProveedoresTable, Proveedore> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProveedoresTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nombreMeta = const VerificationMeta('nombre');
+  @override
+  late final GeneratedColumn<String> nombre = GeneratedColumn<String>(
+    'nombre',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _diasServicioMeta = const VerificationMeta(
+    'diasServicio',
+  );
+  @override
+  late final GeneratedColumn<String> diasServicio = GeneratedColumn<String>(
+    'dias_servicio',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _numeroMeta = const VerificationMeta('numero');
+  @override
+  late final GeneratedColumn<String> numero = GeneratedColumn<String>(
+    'numero',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _correoMeta = const VerificationMeta('correo');
+  @override
+  late final GeneratedColumn<String> correo = GeneratedColumn<String>(
+    'correo',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    nombre,
+    diasServicio,
+    numero,
+    correo,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'proveedores';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Proveedore> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('nombre')) {
+      context.handle(
+        _nombreMeta,
+        nombre.isAcceptableOrUnknown(data['nombre']!, _nombreMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nombreMeta);
+    }
+    if (data.containsKey('dias_servicio')) {
+      context.handle(
+        _diasServicioMeta,
+        diasServicio.isAcceptableOrUnknown(
+          data['dias_servicio']!,
+          _diasServicioMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_diasServicioMeta);
+    }
+    if (data.containsKey('numero')) {
+      context.handle(
+        _numeroMeta,
+        numero.isAcceptableOrUnknown(data['numero']!, _numeroMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_numeroMeta);
+    }
+    if (data.containsKey('correo')) {
+      context.handle(
+        _correoMeta,
+        correo.isAcceptableOrUnknown(data['correo']!, _correoMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_correoMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Proveedore map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Proveedore(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      nombre: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}nombre'],
+      )!,
+      diasServicio: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dias_servicio'],
+      )!,
+      numero: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}numero'],
+      )!,
+      correo: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}correo'],
+      )!,
+    );
+  }
+
+  @override
+  $ProveedoresTable createAlias(String alias) {
+    return $ProveedoresTable(attachedDatabase, alias);
+  }
+}
+
+class Proveedore extends DataClass implements Insertable<Proveedore> {
+  final int id;
+  final String nombre;
+  final String diasServicio;
+  final String numero;
+  final String correo;
+  const Proveedore({
+    required this.id,
+    required this.nombre,
+    required this.diasServicio,
+    required this.numero,
+    required this.correo,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['nombre'] = Variable<String>(nombre);
+    map['dias_servicio'] = Variable<String>(diasServicio);
+    map['numero'] = Variable<String>(numero);
+    map['correo'] = Variable<String>(correo);
+    return map;
+  }
+
+  ProveedoresCompanion toCompanion(bool nullToAbsent) {
+    return ProveedoresCompanion(
+      id: Value(id),
+      nombre: Value(nombre),
+      diasServicio: Value(diasServicio),
+      numero: Value(numero),
+      correo: Value(correo),
+    );
+  }
+
+  factory Proveedore.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Proveedore(
+      id: serializer.fromJson<int>(json['id']),
+      nombre: serializer.fromJson<String>(json['nombre']),
+      diasServicio: serializer.fromJson<String>(json['diasServicio']),
+      numero: serializer.fromJson<String>(json['numero']),
+      correo: serializer.fromJson<String>(json['correo']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'nombre': serializer.toJson<String>(nombre),
+      'diasServicio': serializer.toJson<String>(diasServicio),
+      'numero': serializer.toJson<String>(numero),
+      'correo': serializer.toJson<String>(correo),
+    };
+  }
+
+  Proveedore copyWith({
+    int? id,
+    String? nombre,
+    String? diasServicio,
+    String? numero,
+    String? correo,
+  }) => Proveedore(
+    id: id ?? this.id,
+    nombre: nombre ?? this.nombre,
+    diasServicio: diasServicio ?? this.diasServicio,
+    numero: numero ?? this.numero,
+    correo: correo ?? this.correo,
+  );
+  Proveedore copyWithCompanion(ProveedoresCompanion data) {
+    return Proveedore(
+      id: data.id.present ? data.id.value : this.id,
+      nombre: data.nombre.present ? data.nombre.value : this.nombre,
+      diasServicio: data.diasServicio.present
+          ? data.diasServicio.value
+          : this.diasServicio,
+      numero: data.numero.present ? data.numero.value : this.numero,
+      correo: data.correo.present ? data.correo.value : this.correo,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Proveedore(')
+          ..write('id: $id, ')
+          ..write('nombre: $nombre, ')
+          ..write('diasServicio: $diasServicio, ')
+          ..write('numero: $numero, ')
+          ..write('correo: $correo')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, nombre, diasServicio, numero, correo);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Proveedore &&
+          other.id == this.id &&
+          other.nombre == this.nombre &&
+          other.diasServicio == this.diasServicio &&
+          other.numero == this.numero &&
+          other.correo == this.correo);
+}
+
+class ProveedoresCompanion extends UpdateCompanion<Proveedore> {
+  final Value<int> id;
+  final Value<String> nombre;
+  final Value<String> diasServicio;
+  final Value<String> numero;
+  final Value<String> correo;
+  const ProveedoresCompanion({
+    this.id = const Value.absent(),
+    this.nombre = const Value.absent(),
+    this.diasServicio = const Value.absent(),
+    this.numero = const Value.absent(),
+    this.correo = const Value.absent(),
+  });
+  ProveedoresCompanion.insert({
+    this.id = const Value.absent(),
+    required String nombre,
+    required String diasServicio,
+    required String numero,
+    required String correo,
+  }) : nombre = Value(nombre),
+       diasServicio = Value(diasServicio),
+       numero = Value(numero),
+       correo = Value(correo);
+  static Insertable<Proveedore> custom({
+    Expression<int>? id,
+    Expression<String>? nombre,
+    Expression<String>? diasServicio,
+    Expression<String>? numero,
+    Expression<String>? correo,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (nombre != null) 'nombre': nombre,
+      if (diasServicio != null) 'dias_servicio': diasServicio,
+      if (numero != null) 'numero': numero,
+      if (correo != null) 'correo': correo,
+    });
+  }
+
+  ProveedoresCompanion copyWith({
+    Value<int>? id,
+    Value<String>? nombre,
+    Value<String>? diasServicio,
+    Value<String>? numero,
+    Value<String>? correo,
+  }) {
+    return ProveedoresCompanion(
+      id: id ?? this.id,
+      nombre: nombre ?? this.nombre,
+      diasServicio: diasServicio ?? this.diasServicio,
+      numero: numero ?? this.numero,
+      correo: correo ?? this.correo,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (nombre.present) {
+      map['nombre'] = Variable<String>(nombre.value);
+    }
+    if (diasServicio.present) {
+      map['dias_servicio'] = Variable<String>(diasServicio.value);
+    }
+    if (numero.present) {
+      map['numero'] = Variable<String>(numero.value);
+    }
+    if (correo.present) {
+      map['correo'] = Variable<String>(correo.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProveedoresCompanion(')
+          ..write('id: $id, ')
+          ..write('nombre: $nombre, ')
+          ..write('diasServicio: $diasServicio, ')
+          ..write('numero: $numero, ')
+          ..write('correo: $correo')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $ProductosTable productos = $ProductosTable(this);
+  late final $ProveedoresTable proveedores = $ProveedoresTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [productos];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [productos, proveedores];
 }
 
 typedef $$ProductosTableCreateCompanionBuilder =
@@ -717,10 +1069,208 @@ typedef $$ProductosTableProcessedTableManager =
       Producto,
       PrefetchHooks Function()
     >;
+typedef $$ProveedoresTableCreateCompanionBuilder =
+    ProveedoresCompanion Function({
+      Value<int> id,
+      required String nombre,
+      required String diasServicio,
+      required String numero,
+      required String correo,
+    });
+typedef $$ProveedoresTableUpdateCompanionBuilder =
+    ProveedoresCompanion Function({
+      Value<int> id,
+      Value<String> nombre,
+      Value<String> diasServicio,
+      Value<String> numero,
+      Value<String> correo,
+    });
+
+class $$ProveedoresTableFilterComposer
+    extends Composer<_$AppDatabase, $ProveedoresTable> {
+  $$ProveedoresTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get nombre => $composableBuilder(
+    column: $table.nombre,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get diasServicio => $composableBuilder(
+    column: $table.diasServicio,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get numero => $composableBuilder(
+    column: $table.numero,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get correo => $composableBuilder(
+    column: $table.correo,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ProveedoresTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProveedoresTable> {
+  $$ProveedoresTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get nombre => $composableBuilder(
+    column: $table.nombre,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get diasServicio => $composableBuilder(
+    column: $table.diasServicio,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get numero => $composableBuilder(
+    column: $table.numero,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get correo => $composableBuilder(
+    column: $table.correo,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProveedoresTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProveedoresTable> {
+  $$ProveedoresTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get nombre =>
+      $composableBuilder(column: $table.nombre, builder: (column) => column);
+
+  GeneratedColumn<String> get diasServicio => $composableBuilder(
+    column: $table.diasServicio,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get numero =>
+      $composableBuilder(column: $table.numero, builder: (column) => column);
+
+  GeneratedColumn<String> get correo =>
+      $composableBuilder(column: $table.correo, builder: (column) => column);
+}
+
+class $$ProveedoresTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProveedoresTable,
+          Proveedore,
+          $$ProveedoresTableFilterComposer,
+          $$ProveedoresTableOrderingComposer,
+          $$ProveedoresTableAnnotationComposer,
+          $$ProveedoresTableCreateCompanionBuilder,
+          $$ProveedoresTableUpdateCompanionBuilder,
+          (
+            Proveedore,
+            BaseReferences<_$AppDatabase, $ProveedoresTable, Proveedore>,
+          ),
+          Proveedore,
+          PrefetchHooks Function()
+        > {
+  $$ProveedoresTableTableManager(_$AppDatabase db, $ProveedoresTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProveedoresTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProveedoresTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProveedoresTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> nombre = const Value.absent(),
+                Value<String> diasServicio = const Value.absent(),
+                Value<String> numero = const Value.absent(),
+                Value<String> correo = const Value.absent(),
+              }) => ProveedoresCompanion(
+                id: id,
+                nombre: nombre,
+                diasServicio: diasServicio,
+                numero: numero,
+                correo: correo,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String nombre,
+                required String diasServicio,
+                required String numero,
+                required String correo,
+              }) => ProveedoresCompanion.insert(
+                id: id,
+                nombre: nombre,
+                diasServicio: diasServicio,
+                numero: numero,
+                correo: correo,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProveedoresTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProveedoresTable,
+      Proveedore,
+      $$ProveedoresTableFilterComposer,
+      $$ProveedoresTableOrderingComposer,
+      $$ProveedoresTableAnnotationComposer,
+      $$ProveedoresTableCreateCompanionBuilder,
+      $$ProveedoresTableUpdateCompanionBuilder,
+      (
+        Proveedore,
+        BaseReferences<_$AppDatabase, $ProveedoresTable, Proveedore>,
+      ),
+      Proveedore,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
   $$ProductosTableTableManager get productos =>
       $$ProductosTableTableManager(_db, _db.productos);
+  $$ProveedoresTableTableManager get proveedores =>
+      $$ProveedoresTableTableManager(_db, _db.proveedores);
 }

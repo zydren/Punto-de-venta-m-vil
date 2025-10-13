@@ -7,7 +7,6 @@ import 'productos/editar_producto.dart';
 class Inventario extends StatefulWidget {
   final AppDatabase db = AppDatabase(); // Instancia única de la base de datos
 
-
   Inventario({super.key});
 
   @override
@@ -40,32 +39,39 @@ class _InventarioState extends State<Inventario> {
             itemCount: productos.length,
             itemBuilder: (context, index) {
               final producto = productos[index];
-              return ListTile(
-                title: Text(producto.nombre),
-                subtitle: Text(
-                    "Compra: \$${producto.precioCompra} - Venta: \$${producto.precioVenta} - Cantidad: ${producto.cantidad}"),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.indigo),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EditarProductoPage(producto: producto, db: widget.db),
-                          ),
-                        );
-                      },
+              return Card(
+                color: Colors.grey.shade200, // color del cuadro sombreado
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text(producto.nombre),
+                    subtitle: Text(
+                        "Compra: \$${producto.precioCompra} - Venta: \$${producto.precioVenta} - Cantidad: ${producto.cantidad}"),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.indigo),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => EditarProductoPage(producto: producto, db: widget.db),
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () async {
+                            await widget.db.delete(widget.db.productos).delete(producto);
+                            // StreamBuilder refresca automáticamente
+                          },
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        await widget.db.delete(widget.db.productos).delete(producto);
-                        // No es necesario setState, StreamBuilder se actualiza solo
-                      },
-                    ),
-                  ],
+                  ),
                 ),
               );
             },
@@ -83,12 +89,12 @@ class _InventarioState extends State<Inventario> {
               builder: (context) => AgregarProductoPage(db: widget.db),
             ),
           );
-          setState(() {});
+          setState(() {}); // fuerza refresco si es necesario
         },
       ),
       bottomNavigationBar: bottomNavBar(
-          context,
-          currentPage: "Inventario"
+        context,
+        currentPage: "Inventario",
       ),
     );
   }

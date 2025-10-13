@@ -12,10 +12,12 @@ class Productos extends Table {
 }
 
 
-/*
-  Provedores,
-    nombre
-    Dias de servicio
-    telefono,
-    correo
-*/
+//-------------Tabla Proveedores-------------------------
+
+class Proveedores extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get nombre => text()();
+  TextColumn get diasServicio => text()(); // puedes guardar días como string JSON
+  TextColumn get numero => text()();
+  TextColumn get correo => text()();
+}

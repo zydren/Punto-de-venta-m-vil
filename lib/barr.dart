@@ -61,7 +61,7 @@ Widget bottomNavBar(BuildContext context, {required String currentPage}) {
               if (currentPage != "Proveedores") {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const Proveedores()),
+                  MaterialPageRoute(builder: (context) =>  Proveedores()),
                 );
               }
             },
