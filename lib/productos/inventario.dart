@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'database/database.dart'; // tu Drift database
-import 'barr.dart';
-import 'productos/agregar_producto.dart';
-import 'productos/editar_producto.dart';
+import '../database/database.dart'; // tu Drift database
+import '../barr.dart';
+import 'agregar_producto.dart';
+import 'editar_producto.dart';
 
 class Inventario extends StatefulWidget {
   final AppDatabase db = AppDatabase(); // Instancia única de la base de datos
@@ -80,7 +80,7 @@ class _InventarioState extends State<Inventario> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.indigo.shade700,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white,),
         onPressed: () async {
           // Navegar a la página de agregar producto pasando la misma instancia de DB
           await Navigator.push(
@@ -89,7 +89,7 @@ class _InventarioState extends State<Inventario> {
               builder: (context) => AgregarProductoPage(db: widget.db),
             ),
           );
-          setState(() {}); // fuerza refresco si es necesario
+          setState(() {}); // fuerza refresco si es necesario (hasta el momento si es necesario)!
         },
       ),
       bottomNavigationBar: bottomNavBar(

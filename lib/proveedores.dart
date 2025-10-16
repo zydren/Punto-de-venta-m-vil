@@ -119,7 +119,7 @@ class _ProveedoresState extends State<Proveedores> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.indigo.shade700,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white,),
         onPressed: () async {
           final agregado = await Navigator.push(
             context,

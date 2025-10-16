@@ -21,3 +21,20 @@ class Proveedores extends Table {
   TextColumn get numero => text()();
   TextColumn get correo => text()();
 }
+
+// --------- Tabla Compras (Encabezado) ---------
+class Compras extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get fecha => dateTime().withDefault(currentDateAndTime)();
+  TextColumn get proveedor => text().nullable()();
+  RealColumn get total => real().withDefault(const Constant(0.0))();
+}
+
+// --------- Tabla ComprasDetalle (Productos por compra) ---------
+class ComprasDetalle extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get compraId => integer().references(Compras, #id)();
+  IntColumn get productoId => integer().references(Productos, #id)();
+  IntColumn get cantidad => integer()();
+  RealColumn get precioCompra => real()();
+}
