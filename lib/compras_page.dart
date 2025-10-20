@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'database/database.dart';
-import 'compras_factura_page.dart'; // página que haremos después
+import 'compras_factura_page.dart';
 
 class ComprasPage extends StatelessWidget {
   final AppDatabase db;
@@ -43,7 +43,7 @@ class ComprasPage extends StatelessWidget {
               ),
               label: const Text("Ver Reporte de Compras", style: TextStyle(color: Colors.white),),
               onPressed: () {
-                // (en el futuro abriremos el reporte)
+                // Aqui va la pagina de facturas
               },
             ),
           ],
