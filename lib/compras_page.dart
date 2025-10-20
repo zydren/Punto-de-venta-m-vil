@@ -43,7 +43,7 @@ class ComprasPage extends StatelessWidget {
               ),
               label: const Text("Ver Reporte de Compras", style: TextStyle(color: Colors.white),),
               onPressed: () {
-                // Aqui va la pagina de facturas
+                // Aqui va la pagina de facturas, la agregaremos mas tarde
               },
             ),
           ],

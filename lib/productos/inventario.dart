@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../database/database.dart'; // tu Drift database
+import '../database/database.dart'; //
 import '../barr.dart';
 import 'agregar_producto.dart';
 import 'editar_producto.dart';
@@ -20,7 +20,7 @@ class _InventarioState extends State<Inventario> {
       appBar: AppBar(
         title: const Text("Inventario"),
         centerTitle: true,
-        automaticallyImplyLeading: false, // sin flecha de regreso
+        automaticallyImplyLeading: false, // sin flecha de regreso, modifica en un futuro
       ),
       body: StreamBuilder<List<Producto>>(
         stream: widget.db.select(widget.db.productos).watch(),
