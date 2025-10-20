@@ -1,11 +1,11 @@
-// C:/Users/zydren/StudioProjects/untitled/lib/compras_reporte_page.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatear fechas
+import 'package:drift/drift.dart' as drift; // Import para OrderingTerm
 import 'database/database.dart';
 
 // Clase para agrupar el detalle de una compra con la información del producto.
 class CompraDetalleConProducto {
-  final CompraDetalle detalle;
+  final ComprasDetalle detalle;
   final Producto producto;
 
   CompraDetalleConProducto({required this.detalle, required this.producto});
@@ -34,27 +34,28 @@ class _ComprasReportePageState extends State<ComprasReportePage> {
   // Método para obtener todas las compras, ordenadas de la más reciente a la más antigua.
   Future<List<Compra>> _getCompras() {
     return (widget.db.select(widget.db.compras)
-          ..orderBy([(t) => t.fecha.desc()]))
+          // Corregido se usa OrderingTerm para ordenar, no funciona con desc
+          ..orderBy([(t) => drift.OrderingTerm(expression: t.fecha, mode: drift.OrderingMode.desc)]))
         .get();
   }
 
   // Método para obtener el desglose de productos de una compra específica.
   Future<List<CompraDetalleConProducto>> _getDetallesCompra(int compraId) async {
     // Se hace un "join" para combinar la tabla de detalles con la de productos.
-    final query = widget.db.select(widget.db.comprasDetalle).join([
-      innerJoin(
+    final query = widget.db.select(widget.db.comprasDetalles).join([
+      drift.innerJoin(
         widget.db.productos,
-        widget.db.productos.id.equalsExp(widget.db.comprasDetalle.productoId),
+        widget.db.productos.id.equalsExp(widget.db.comprasDetalles.productoId),
       )
     ])
-      ..where(widget.db.comprasDetalle.compraId.equals(compraId));
+      ..where(widget.db.comprasDetalles.compraId.equals(compraId));
 
     final results = await query.get();
 
     // Se convierte el resultado de la consulta en una lista de objetos manejables.
     return results.map((row) {
       return CompraDetalleConProducto(
-        detalle: row.readTable(widget.db.comprasDetalle),
+        detalle: row.readTable(widget.db.comprasDetalles),
         producto: row.readTable(widget.db.productos),
       );
     }).toList();

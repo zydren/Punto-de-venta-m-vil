@@ -1118,12 +1118,12 @@ class ComprasCompanion extends UpdateCompanion<Compra> {
   }
 }
 
-class $ComprasDetalleTable extends ComprasDetalle
-    with TableInfo<$ComprasDetalleTable, ComprasDetalleData> {
+class $ComprasDetallesTable extends ComprasDetalles
+    with TableInfo<$ComprasDetallesTable, ComprasDetalle> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ComprasDetalleTable(this.attachedDatabase, [this._alias]);
+  $ComprasDetallesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -1199,10 +1199,10 @@ class $ComprasDetalleTable extends ComprasDetalle
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'compras_detalle';
+  static const String $name = 'compras_detalles';
   @override
   VerificationContext validateIntegrity(
-    Insertable<ComprasDetalleData> instance, {
+    Insertable<ComprasDetalle> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -1251,9 +1251,9 @@ class $ComprasDetalleTable extends ComprasDetalle
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ComprasDetalleData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ComprasDetalle map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ComprasDetalleData(
+    return ComprasDetalle(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -1278,19 +1278,18 @@ class $ComprasDetalleTable extends ComprasDetalle
   }
 
   @override
-  $ComprasDetalleTable createAlias(String alias) {
-    return $ComprasDetalleTable(attachedDatabase, alias);
+  $ComprasDetallesTable createAlias(String alias) {
+    return $ComprasDetallesTable(attachedDatabase, alias);
   }
 }
 
-class ComprasDetalleData extends DataClass
-    implements Insertable<ComprasDetalleData> {
+class ComprasDetalle extends DataClass implements Insertable<ComprasDetalle> {
   final int id;
   final int compraId;
   final int productoId;
   final int cantidad;
   final double precioCompra;
-  const ComprasDetalleData({
+  const ComprasDetalle({
     required this.id,
     required this.compraId,
     required this.productoId,
@@ -1308,8 +1307,8 @@ class ComprasDetalleData extends DataClass
     return map;
   }
 
-  ComprasDetalleCompanion toCompanion(bool nullToAbsent) {
-    return ComprasDetalleCompanion(
+  ComprasDetallesCompanion toCompanion(bool nullToAbsent) {
+    return ComprasDetallesCompanion(
       id: Value(id),
       compraId: Value(compraId),
       productoId: Value(productoId),
@@ -1318,12 +1317,12 @@ class ComprasDetalleData extends DataClass
     );
   }
 
-  factory ComprasDetalleData.fromJson(
+  factory ComprasDetalle.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ComprasDetalleData(
+    return ComprasDetalle(
       id: serializer.fromJson<int>(json['id']),
       compraId: serializer.fromJson<int>(json['compraId']),
       productoId: serializer.fromJson<int>(json['productoId']),
@@ -1343,21 +1342,21 @@ class ComprasDetalleData extends DataClass
     };
   }
 
-  ComprasDetalleData copyWith({
+  ComprasDetalle copyWith({
     int? id,
     int? compraId,
     int? productoId,
     int? cantidad,
     double? precioCompra,
-  }) => ComprasDetalleData(
+  }) => ComprasDetalle(
     id: id ?? this.id,
     compraId: compraId ?? this.compraId,
     productoId: productoId ?? this.productoId,
     cantidad: cantidad ?? this.cantidad,
     precioCompra: precioCompra ?? this.precioCompra,
   );
-  ComprasDetalleData copyWithCompanion(ComprasDetalleCompanion data) {
-    return ComprasDetalleData(
+  ComprasDetalle copyWithCompanion(ComprasDetallesCompanion data) {
+    return ComprasDetalle(
       id: data.id.present ? data.id.value : this.id,
       compraId: data.compraId.present ? data.compraId.value : this.compraId,
       productoId: data.productoId.present
@@ -1372,7 +1371,7 @@ class ComprasDetalleData extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ComprasDetalleData(')
+    return (StringBuffer('ComprasDetalle(')
           ..write('id: $id, ')
           ..write('compraId: $compraId, ')
           ..write('productoId: $productoId, ')
@@ -1388,7 +1387,7 @@ class ComprasDetalleData extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ComprasDetalleData &&
+      (other is ComprasDetalle &&
           other.id == this.id &&
           other.compraId == this.compraId &&
           other.productoId == this.productoId &&
@@ -1396,20 +1395,20 @@ class ComprasDetalleData extends DataClass
           other.precioCompra == this.precioCompra);
 }
 
-class ComprasDetalleCompanion extends UpdateCompanion<ComprasDetalleData> {
+class ComprasDetallesCompanion extends UpdateCompanion<ComprasDetalle> {
   final Value<int> id;
   final Value<int> compraId;
   final Value<int> productoId;
   final Value<int> cantidad;
   final Value<double> precioCompra;
-  const ComprasDetalleCompanion({
+  const ComprasDetallesCompanion({
     this.id = const Value.absent(),
     this.compraId = const Value.absent(),
     this.productoId = const Value.absent(),
     this.cantidad = const Value.absent(),
     this.precioCompra = const Value.absent(),
   });
-  ComprasDetalleCompanion.insert({
+  ComprasDetallesCompanion.insert({
     this.id = const Value.absent(),
     required int compraId,
     required int productoId,
@@ -1419,7 +1418,7 @@ class ComprasDetalleCompanion extends UpdateCompanion<ComprasDetalleData> {
        productoId = Value(productoId),
        cantidad = Value(cantidad),
        precioCompra = Value(precioCompra);
-  static Insertable<ComprasDetalleData> custom({
+  static Insertable<ComprasDetalle> custom({
     Expression<int>? id,
     Expression<int>? compraId,
     Expression<int>? productoId,
@@ -1435,14 +1434,14 @@ class ComprasDetalleCompanion extends UpdateCompanion<ComprasDetalleData> {
     });
   }
 
-  ComprasDetalleCompanion copyWith({
+  ComprasDetallesCompanion copyWith({
     Value<int>? id,
     Value<int>? compraId,
     Value<int>? productoId,
     Value<int>? cantidad,
     Value<double>? precioCompra,
   }) {
-    return ComprasDetalleCompanion(
+    return ComprasDetallesCompanion(
       id: id ?? this.id,
       compraId: compraId ?? this.compraId,
       productoId: productoId ?? this.productoId,
@@ -1474,7 +1473,7 @@ class ComprasDetalleCompanion extends UpdateCompanion<ComprasDetalleData> {
 
   @override
   String toString() {
-    return (StringBuffer('ComprasDetalleCompanion(')
+    return (StringBuffer('ComprasDetallesCompanion(')
           ..write('id: $id, ')
           ..write('compraId: $compraId, ')
           ..write('productoId: $productoId, ')
@@ -1491,7 +1490,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $ProductosTable productos = $ProductosTable(this);
   late final $ProveedoresTable proveedores = $ProveedoresTable(this);
   late final $ComprasTable compras = $ComprasTable(this);
-  late final $ComprasDetalleTable comprasDetalle = $ComprasDetalleTable(this);
+  late final $ComprasDetallesTable comprasDetalles = $ComprasDetallesTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1500,7 +1501,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     productos,
     proveedores,
     compras,
-    comprasDetalle,
+    comprasDetalles,
   ];
 }
 
@@ -1529,22 +1530,24 @@ final class $$ProductosTableReferences
     extends BaseReferences<_$AppDatabase, $ProductosTable, Producto> {
   $$ProductosTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$ComprasDetalleTable, List<ComprasDetalleData>>
-  _comprasDetalleRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.comprasDetalle,
+  static MultiTypedResultKey<$ComprasDetallesTable, List<ComprasDetalle>>
+  _comprasDetallesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.comprasDetalles,
     aliasName: $_aliasNameGenerator(
       db.productos.id,
-      db.comprasDetalle.productoId,
+      db.comprasDetalles.productoId,
     ),
   );
 
-  $$ComprasDetalleTableProcessedTableManager get comprasDetalleRefs {
-    final manager = $$ComprasDetalleTableTableManager(
+  $$ComprasDetallesTableProcessedTableManager get comprasDetallesRefs {
+    final manager = $$ComprasDetallesTableTableManager(
       $_db,
-      $_db.comprasDetalle,
+      $_db.comprasDetalles,
     ).filter((f) => f.productoId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_comprasDetalleRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _comprasDetallesRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -1595,22 +1598,22 @@ class $$ProductosTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> comprasDetalleRefs(
-    Expression<bool> Function($$ComprasDetalleTableFilterComposer f) f,
+  Expression<bool> comprasDetallesRefs(
+    Expression<bool> Function($$ComprasDetallesTableFilterComposer f) f,
   ) {
-    final $$ComprasDetalleTableFilterComposer composer = $composerBuilder(
+    final $$ComprasDetallesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.comprasDetalle,
+      referencedTable: $db.comprasDetalles,
       getReferencedColumn: (t) => t.productoId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ComprasDetalleTableFilterComposer(
+          }) => $$ComprasDetallesTableFilterComposer(
             $db: $db,
-            $table: $db.comprasDetalle,
+            $table: $db.comprasDetalles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1702,22 +1705,22 @@ class $$ProductosTableAnnotationComposer
   GeneratedColumn<String> get proveedor =>
       $composableBuilder(column: $table.proveedor, builder: (column) => column);
 
-  Expression<T> comprasDetalleRefs<T extends Object>(
-    Expression<T> Function($$ComprasDetalleTableAnnotationComposer a) f,
+  Expression<T> comprasDetallesRefs<T extends Object>(
+    Expression<T> Function($$ComprasDetallesTableAnnotationComposer a) f,
   ) {
-    final $$ComprasDetalleTableAnnotationComposer composer = $composerBuilder(
+    final $$ComprasDetallesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.comprasDetalle,
+      referencedTable: $db.comprasDetalles,
       getReferencedColumn: (t) => t.productoId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ComprasDetalleTableAnnotationComposer(
+          }) => $$ComprasDetallesTableAnnotationComposer(
             $db: $db,
-            $table: $db.comprasDetalle,
+            $table: $db.comprasDetalles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -1741,7 +1744,7 @@ class $$ProductosTableTableManager
           $$ProductosTableUpdateCompanionBuilder,
           (Producto, $$ProductosTableReferences),
           Producto,
-          PrefetchHooks Function({bool comprasDetalleRefs})
+          PrefetchHooks Function({bool comprasDetallesRefs})
         > {
   $$ProductosTableTableManager(_$AppDatabase db, $ProductosTable table)
     : super(
@@ -1798,30 +1801,30 @@ class $$ProductosTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({comprasDetalleRefs = false}) {
+          prefetchHooksCallback: ({comprasDetallesRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (comprasDetalleRefs) db.comprasDetalle,
+                if (comprasDetallesRefs) db.comprasDetalles,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (comprasDetalleRefs)
+                  if (comprasDetallesRefs)
                     await $_getPrefetchedData<
                       Producto,
                       $ProductosTable,
-                      ComprasDetalleData
+                      ComprasDetalle
                     >(
                       currentTable: table,
                       referencedTable: $$ProductosTableReferences
-                          ._comprasDetalleRefsTable(db),
+                          ._comprasDetallesRefsTable(db),
                       managerFromTypedResult: (p0) =>
                           $$ProductosTableReferences(
                             db,
                             table,
                             p0,
-                          ).comprasDetalleRefs,
+                          ).comprasDetallesRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.productoId == item.id),
                       typedResults: items,
@@ -1846,7 +1849,7 @@ typedef $$ProductosTableProcessedTableManager =
       $$ProductosTableUpdateCompanionBuilder,
       (Producto, $$ProductosTableReferences),
       Producto,
-      PrefetchHooks Function({bool comprasDetalleRefs})
+      PrefetchHooks Function({bool comprasDetallesRefs})
     >;
 typedef $$ProveedoresTableCreateCompanionBuilder =
     ProveedoresCompanion Function({
@@ -2063,19 +2066,21 @@ final class $$ComprasTableReferences
     extends BaseReferences<_$AppDatabase, $ComprasTable, Compra> {
   $$ComprasTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$ComprasDetalleTable, List<ComprasDetalleData>>
-  _comprasDetalleRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-    db.comprasDetalle,
-    aliasName: $_aliasNameGenerator(db.compras.id, db.comprasDetalle.compraId),
+  static MultiTypedResultKey<$ComprasDetallesTable, List<ComprasDetalle>>
+  _comprasDetallesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.comprasDetalles,
+    aliasName: $_aliasNameGenerator(db.compras.id, db.comprasDetalles.compraId),
   );
 
-  $$ComprasDetalleTableProcessedTableManager get comprasDetalleRefs {
-    final manager = $$ComprasDetalleTableTableManager(
+  $$ComprasDetallesTableProcessedTableManager get comprasDetallesRefs {
+    final manager = $$ComprasDetallesTableTableManager(
       $_db,
-      $_db.comprasDetalle,
+      $_db.comprasDetalles,
     ).filter((f) => f.compraId.id.sqlEquals($_itemColumn<int>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_comprasDetalleRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(
+      _comprasDetallesRefsTable($_db),
+    );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -2111,22 +2116,22 @@ class $$ComprasTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  Expression<bool> comprasDetalleRefs(
-    Expression<bool> Function($$ComprasDetalleTableFilterComposer f) f,
+  Expression<bool> comprasDetallesRefs(
+    Expression<bool> Function($$ComprasDetallesTableFilterComposer f) f,
   ) {
-    final $$ComprasDetalleTableFilterComposer composer = $composerBuilder(
+    final $$ComprasDetallesTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.comprasDetalle,
+      referencedTable: $db.comprasDetalles,
       getReferencedColumn: (t) => t.compraId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ComprasDetalleTableFilterComposer(
+          }) => $$ComprasDetallesTableFilterComposer(
             $db: $db,
-            $table: $db.comprasDetalle,
+            $table: $db.comprasDetalles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -2188,22 +2193,22 @@ class $$ComprasTableAnnotationComposer
   GeneratedColumn<double> get total =>
       $composableBuilder(column: $table.total, builder: (column) => column);
 
-  Expression<T> comprasDetalleRefs<T extends Object>(
-    Expression<T> Function($$ComprasDetalleTableAnnotationComposer a) f,
+  Expression<T> comprasDetallesRefs<T extends Object>(
+    Expression<T> Function($$ComprasDetallesTableAnnotationComposer a) f,
   ) {
-    final $$ComprasDetalleTableAnnotationComposer composer = $composerBuilder(
+    final $$ComprasDetallesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.comprasDetalle,
+      referencedTable: $db.comprasDetalles,
       getReferencedColumn: (t) => t.compraId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$ComprasDetalleTableAnnotationComposer(
+          }) => $$ComprasDetallesTableAnnotationComposer(
             $db: $db,
-            $table: $db.comprasDetalle,
+            $table: $db.comprasDetalles,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -2227,7 +2232,7 @@ class $$ComprasTableTableManager
           $$ComprasTableUpdateCompanionBuilder,
           (Compra, $$ComprasTableReferences),
           Compra,
-          PrefetchHooks Function({bool comprasDetalleRefs})
+          PrefetchHooks Function({bool comprasDetallesRefs})
         > {
   $$ComprasTableTableManager(_$AppDatabase db, $ComprasTable table)
     : super(
@@ -2272,29 +2277,29 @@ class $$ComprasTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({comprasDetalleRefs = false}) {
+          prefetchHooksCallback: ({comprasDetallesRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
-                if (comprasDetalleRefs) db.comprasDetalle,
+                if (comprasDetallesRefs) db.comprasDetalles,
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
                 return [
-                  if (comprasDetalleRefs)
+                  if (comprasDetallesRefs)
                     await $_getPrefetchedData<
                       Compra,
                       $ComprasTable,
-                      ComprasDetalleData
+                      ComprasDetalle
                     >(
                       currentTable: table,
                       referencedTable: $$ComprasTableReferences
-                          ._comprasDetalleRefsTable(db),
+                          ._comprasDetallesRefsTable(db),
                       managerFromTypedResult: (p0) => $$ComprasTableReferences(
                         db,
                         table,
                         p0,
-                      ).comprasDetalleRefs,
+                      ).comprasDetallesRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where((e) => e.compraId == item.id),
                       typedResults: items,
@@ -2319,18 +2324,18 @@ typedef $$ComprasTableProcessedTableManager =
       $$ComprasTableUpdateCompanionBuilder,
       (Compra, $$ComprasTableReferences),
       Compra,
-      PrefetchHooks Function({bool comprasDetalleRefs})
+      PrefetchHooks Function({bool comprasDetallesRefs})
     >;
-typedef $$ComprasDetalleTableCreateCompanionBuilder =
-    ComprasDetalleCompanion Function({
+typedef $$ComprasDetallesTableCreateCompanionBuilder =
+    ComprasDetallesCompanion Function({
       Value<int> id,
       required int compraId,
       required int productoId,
       required int cantidad,
       required double precioCompra,
     });
-typedef $$ComprasDetalleTableUpdateCompanionBuilder =
-    ComprasDetalleCompanion Function({
+typedef $$ComprasDetallesTableUpdateCompanionBuilder =
+    ComprasDetallesCompanion Function({
       Value<int> id,
       Value<int> compraId,
       Value<int> productoId,
@@ -2338,14 +2343,10 @@ typedef $$ComprasDetalleTableUpdateCompanionBuilder =
       Value<double> precioCompra,
     });
 
-final class $$ComprasDetalleTableReferences
+final class $$ComprasDetallesTableReferences
     extends
-        BaseReferences<
-          _$AppDatabase,
-          $ComprasDetalleTable,
-          ComprasDetalleData
-        > {
-  $$ComprasDetalleTableReferences(
+        BaseReferences<_$AppDatabase, $ComprasDetallesTable, ComprasDetalle> {
+  $$ComprasDetallesTableReferences(
     super.$_db,
     super.$_table,
     super.$_typedResult,
@@ -2353,7 +2354,7 @@ final class $$ComprasDetalleTableReferences
 
   static $ComprasTable _compraIdTable(_$AppDatabase db) =>
       db.compras.createAlias(
-        $_aliasNameGenerator(db.comprasDetalle.compraId, db.compras.id),
+        $_aliasNameGenerator(db.comprasDetalles.compraId, db.compras.id),
       );
 
   $$ComprasTableProcessedTableManager get compraId {
@@ -2372,7 +2373,7 @@ final class $$ComprasDetalleTableReferences
 
   static $ProductosTable _productoIdTable(_$AppDatabase db) =>
       db.productos.createAlias(
-        $_aliasNameGenerator(db.comprasDetalle.productoId, db.productos.id),
+        $_aliasNameGenerator(db.comprasDetalles.productoId, db.productos.id),
       );
 
   $$ProductosTableProcessedTableManager get productoId {
@@ -2390,9 +2391,9 @@ final class $$ComprasDetalleTableReferences
   }
 }
 
-class $$ComprasDetalleTableFilterComposer
-    extends Composer<_$AppDatabase, $ComprasDetalleTable> {
-  $$ComprasDetalleTableFilterComposer({
+class $$ComprasDetallesTableFilterComposer
+    extends Composer<_$AppDatabase, $ComprasDetallesTable> {
+  $$ComprasDetallesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2461,9 +2462,9 @@ class $$ComprasDetalleTableFilterComposer
   }
 }
 
-class $$ComprasDetalleTableOrderingComposer
-    extends Composer<_$AppDatabase, $ComprasDetalleTable> {
-  $$ComprasDetalleTableOrderingComposer({
+class $$ComprasDetallesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ComprasDetallesTable> {
+  $$ComprasDetallesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2532,9 +2533,9 @@ class $$ComprasDetalleTableOrderingComposer
   }
 }
 
-class $$ComprasDetalleTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ComprasDetalleTable> {
-  $$ComprasDetalleTableAnnotationComposer({
+class $$ComprasDetallesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ComprasDetallesTable> {
+  $$ComprasDetallesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -2599,34 +2600,34 @@ class $$ComprasDetalleTableAnnotationComposer
   }
 }
 
-class $$ComprasDetalleTableTableManager
+class $$ComprasDetallesTableTableManager
     extends
         RootTableManager<
           _$AppDatabase,
-          $ComprasDetalleTable,
-          ComprasDetalleData,
-          $$ComprasDetalleTableFilterComposer,
-          $$ComprasDetalleTableOrderingComposer,
-          $$ComprasDetalleTableAnnotationComposer,
-          $$ComprasDetalleTableCreateCompanionBuilder,
-          $$ComprasDetalleTableUpdateCompanionBuilder,
-          (ComprasDetalleData, $$ComprasDetalleTableReferences),
-          ComprasDetalleData,
+          $ComprasDetallesTable,
+          ComprasDetalle,
+          $$ComprasDetallesTableFilterComposer,
+          $$ComprasDetallesTableOrderingComposer,
+          $$ComprasDetallesTableAnnotationComposer,
+          $$ComprasDetallesTableCreateCompanionBuilder,
+          $$ComprasDetallesTableUpdateCompanionBuilder,
+          (ComprasDetalle, $$ComprasDetallesTableReferences),
+          ComprasDetalle,
           PrefetchHooks Function({bool compraId, bool productoId})
         > {
-  $$ComprasDetalleTableTableManager(
+  $$ComprasDetallesTableTableManager(
     _$AppDatabase db,
-    $ComprasDetalleTable table,
+    $ComprasDetallesTable table,
   ) : super(
         TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$ComprasDetalleTableFilterComposer($db: db, $table: table),
+              $$ComprasDetallesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$ComprasDetalleTableOrderingComposer($db: db, $table: table),
+              $$ComprasDetallesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$ComprasDetalleTableAnnotationComposer($db: db, $table: table),
+              $$ComprasDetallesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
@@ -2634,7 +2635,7 @@ class $$ComprasDetalleTableTableManager
                 Value<int> productoId = const Value.absent(),
                 Value<int> cantidad = const Value.absent(),
                 Value<double> precioCompra = const Value.absent(),
-              }) => ComprasDetalleCompanion(
+              }) => ComprasDetallesCompanion(
                 id: id,
                 compraId: compraId,
                 productoId: productoId,
@@ -2648,7 +2649,7 @@ class $$ComprasDetalleTableTableManager
                 required int productoId,
                 required int cantidad,
                 required double precioCompra,
-              }) => ComprasDetalleCompanion.insert(
+              }) => ComprasDetallesCompanion.insert(
                 id: id,
                 compraId: compraId,
                 productoId: productoId,
@@ -2659,7 +2660,7 @@ class $$ComprasDetalleTableTableManager
               .map(
                 (e) => (
                   e.readTable(table),
-                  $$ComprasDetalleTableReferences(db, table, e),
+                  $$ComprasDetallesTableReferences(db, table, e),
                 ),
               )
               .toList(),
@@ -2688,10 +2689,11 @@ class $$ComprasDetalleTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.compraId,
-                                referencedTable: $$ComprasDetalleTableReferences
-                                    ._compraIdTable(db),
+                                referencedTable:
+                                    $$ComprasDetallesTableReferences
+                                        ._compraIdTable(db),
                                 referencedColumn:
-                                    $$ComprasDetalleTableReferences
+                                    $$ComprasDetallesTableReferences
                                         ._compraIdTable(db)
                                         .id,
                               )
@@ -2702,10 +2704,11 @@ class $$ComprasDetalleTableTableManager
                           state.withJoin(
                                 currentTable: table,
                                 currentColumn: table.productoId,
-                                referencedTable: $$ComprasDetalleTableReferences
-                                    ._productoIdTable(db),
+                                referencedTable:
+                                    $$ComprasDetallesTableReferences
+                                        ._productoIdTable(db),
                                 referencedColumn:
-                                    $$ComprasDetalleTableReferences
+                                    $$ComprasDetallesTableReferences
                                         ._productoIdTable(db)
                                         .id,
                               )
@@ -2723,18 +2726,18 @@ class $$ComprasDetalleTableTableManager
       );
 }
 
-typedef $$ComprasDetalleTableProcessedTableManager =
+typedef $$ComprasDetallesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
-      $ComprasDetalleTable,
-      ComprasDetalleData,
-      $$ComprasDetalleTableFilterComposer,
-      $$ComprasDetalleTableOrderingComposer,
-      $$ComprasDetalleTableAnnotationComposer,
-      $$ComprasDetalleTableCreateCompanionBuilder,
-      $$ComprasDetalleTableUpdateCompanionBuilder,
-      (ComprasDetalleData, $$ComprasDetalleTableReferences),
-      ComprasDetalleData,
+      $ComprasDetallesTable,
+      ComprasDetalle,
+      $$ComprasDetallesTableFilterComposer,
+      $$ComprasDetallesTableOrderingComposer,
+      $$ComprasDetallesTableAnnotationComposer,
+      $$ComprasDetallesTableCreateCompanionBuilder,
+      $$ComprasDetallesTableUpdateCompanionBuilder,
+      (ComprasDetalle, $$ComprasDetallesTableReferences),
+      ComprasDetalle,
       PrefetchHooks Function({bool compraId, bool productoId})
     >;
 
@@ -2747,6 +2750,6 @@ class $AppDatabaseManager {
       $$ProveedoresTableTableManager(_db, _db.proveedores);
   $$ComprasTableTableManager get compras =>
       $$ComprasTableTableManager(_db, _db.compras);
-  $$ComprasDetalleTableTableManager get comprasDetalle =>
-      $$ComprasDetalleTableTableManager(_db, _db.comprasDetalle);
+  $$ComprasDetallesTableTableManager get comprasDetalles =>
+      $$ComprasDetallesTableTableManager(_db, _db.comprasDetalles);
 }

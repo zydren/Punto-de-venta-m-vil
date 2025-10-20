@@ -4,7 +4,8 @@ import 'productos/inventario.dart';
 import 'proveedores.dart';
 import 'compras_factura_page.dart';
 import 'compras_page.dart';
-import 'database/database.dart';
+// Se oculta la clase 'Proveedores' de la base de datos para evitar conflicto.
+import 'database/database.dart' hide Proveedores;
 
 final AppDatabase db = AppDatabase();
 
@@ -87,7 +88,7 @@ Widget bottomNavBar(BuildContext context, {required String currentPage}) {
 
         VerticalDivider(width: 1, thickness: 1, color: Colors.white24),
 
-        // --- Compras (nuevo botón) ---
+        // --- Compras ---
         Expanded(
           child: InkWell(
             onTap: () {

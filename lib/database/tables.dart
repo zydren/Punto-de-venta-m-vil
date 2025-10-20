@@ -30,8 +30,8 @@ class Compras extends Table {
   RealColumn get total => real().withDefault(const Constant(0.0))();
 }
 
-// --------- Tabla ComprasDetalle (Productos por compra) ---------
-class ComprasDetalle extends Table {
+// --------- Tabla ComprasDetalles (Productos por compra) ---------
+class ComprasDetalles extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get compraId => integer().references(Compras, #id)();
   IntColumn get productoId => integer().references(Productos, #id)();
