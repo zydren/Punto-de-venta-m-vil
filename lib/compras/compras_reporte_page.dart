@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatear fechas
 import 'package:drift/drift.dart' as drift; // Import para OrderingTerm
-import 'database/database.dart';
+import '../database/database.dart';
 
 // Clase para agrupar el detalle de una compra con la información del producto.
 class CompraDetalleConProducto {

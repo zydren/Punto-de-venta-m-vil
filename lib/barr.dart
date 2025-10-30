@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'inicio.dart';
 import 'productos/inventario.dart';
-import 'proveedores.dart';
-import 'compras_factura_page.dart';
-import 'compras_page.dart';
+import 'proveedores/proveedores.dart';
+import 'compras/compras_factura_page.dart';
+import 'compras/compras_page.dart';
 // Se oculta la clase 'Proveedores' de la base de datos para evitar conflicto.
 import 'database/database.dart' hide Proveedores;
 
@@ -32,7 +32,7 @@ Widget bottomNavBar(BuildContext context, {required String currentPage}) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.receipt_long, color: Colors.white),
-                Text("Facturas", style: TextStyle(color: Colors.white)),
+                Text("Facturas", style: TextStyle(color: Colors.white, fontSize: 12)),
               ],
             ),
           ),
@@ -56,7 +56,7 @@ Widget bottomNavBar(BuildContext context, {required String currentPage}) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.inventory, color: Colors.white),
-                Text("Inventario", style: TextStyle(color: Colors.white)),
+                Text("Inventario", style: TextStyle(color: Colors.white, fontSize: 12)),
               ],
             ),
           ),
@@ -80,7 +80,7 @@ Widget bottomNavBar(BuildContext context, {required String currentPage}) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.local_shipping, color: Colors.white),
-                Text("Proveedores", style: TextStyle(color: Colors.white)),
+                Text("Proveedores", style: TextStyle(color: Colors.white, fontSize: 12)),
               ],
             ),
           ),
@@ -105,7 +105,7 @@ Widget bottomNavBar(BuildContext context, {required String currentPage}) {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.shopping_cart, color: Colors.white),
-                Text("Compras", style: TextStyle(color: Colors.white)),
+                Text("Compras", style: TextStyle(color: Colors.white, fontSize: 12)),
               ],
             ),
           ),
@@ -114,4 +114,3 @@ Widget bottomNavBar(BuildContext context, {required String currentPage}) {
     ),
   );
 }
-

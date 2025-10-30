@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'database/database.dart';
+import '../database/database.dart';
 import 'agregar_proveedor.dart';
-import 'barr.dart';
+import '../barr.dart';
 import 'editar_proveedor.dart';
 
 class Proveedores extends StatefulWidget {

@@ -1,6 +1,6 @@
 // Importaciones de paquetes necesarios.
 import 'package:flutter/material.dart';
-import 'database/database.dart';
+import '../database/database.dart';
 import 'compras_factura_page.dart';
 import 'compras_reporte_page.dart';
 

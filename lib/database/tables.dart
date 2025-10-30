@@ -38,3 +38,21 @@ class ComprasDetalles extends Table {
   IntColumn get cantidad => integer()();
   RealColumn get precioCompra => real()();
 }
+
+// --------- Tabla Ventas (Encabezado del Ticket) ---------
+class Ventas extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  DateTimeColumn get fecha => dateTime().withDefault(currentDateAndTime)();
+  RealColumn get total => real().withDefault(const Constant(0.0))();
+  // Nueva columna para marcar tickets cancelados.
+  BoolColumn get cancelado => boolean().withDefault(const Constant(false))();
+}
+
+// --------- Tabla VentasDetalles (Productos por venta) ---------
+class VentasDetalles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get ventaId => integer().references(Ventas, #id)();
+  IntColumn get productoId => integer().references(Productos, #id)();
+  IntColumn get cantidad => integer()();
+  RealColumn get precioVenta => real()();
+}

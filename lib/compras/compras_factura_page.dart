@@ -1,7 +1,8 @@
+
 // Importaciones necesarias para la UI de Flutter, Drift para la base de datos, y la propia base de datos.
 import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' as drift;
-import 'database/database.dart';
+import '../database/database.dart';
 
 // Define un StatefulWidget para la página de la factura de compras, que necesita manejar estado.
 class ComprasFacturaPage extends StatefulWidget {

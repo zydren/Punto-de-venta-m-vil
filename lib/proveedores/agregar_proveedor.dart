@@ -1,30 +1,24 @@
 import 'package:flutter/material.dart';
-import 'database/database.dart'; // tu Drift database
 import 'package:drift/drift.dart' as drift;
-import 'proveedores.dart';
+import '../database/database.dart';
 
-class EditarProveedorPage extends StatefulWidget {
+class AgregarProveedorPage extends StatefulWidget {
   final AppDatabase db;
-  final Proveedore proveedor;
 
-  const EditarProveedorPage({
-    super.key,
-    required this.db,
-    required this.proveedor,
-  });
+  const AgregarProveedorPage({super.key, required this.db});
 
   @override
-  State<EditarProveedorPage> createState() => _EditarProveedorPageState();
+  State<AgregarProveedorPage> createState() => _AgregarProveedorPageState();
 }
 
-class _EditarProveedorPageState extends State<EditarProveedorPage> {
+class _AgregarProveedorPageState extends State<AgregarProveedorPage> {
   final _formKey = GlobalKey<FormState>();
 
-  late TextEditingController nombreController;
-  late TextEditingController numeroController;
-  late TextEditingController correoController;
+  final TextEditingController nombreController = TextEditingController();
+  final TextEditingController numeroController = TextEditingController();
+  final TextEditingController correoController = TextEditingController();
 
-  // Lista fija de días
+  // Lista de días de servicio disponibles
   final List<String> dias = [
     'Lunes',
     'Martes',
@@ -32,40 +26,17 @@ class _EditarProveedorPageState extends State<EditarProveedorPage> {
     'Jueves',
     'Viernes',
     'Sábado',
-    'Domingo',
+    'Domingo'
   ];
 
-  // Días seleccionados (Set para evitar duplicados)
-  late Set<String> seleccionados;
-
-  @override
-  void initState() {
-    super.initState();
-
-    nombreController = TextEditingController(text: widget.proveedor.nombre);
-    numeroController = TextEditingController(text: widget.proveedor.numero);
-    correoController = TextEditingController(text: widget.proveedor.correo);
-
-    // Convertimos el string de días guardados a un Set
-    final diasGuardados = widget.proveedor.diasServicio ?? '';
-    seleccionados = diasGuardados.isNotEmpty
-        ? diasGuardados.split(',').map((e) => e.trim()).toSet()
-        : <String>{};
-  }
-
-  @override
-  void dispose() {
-    nombreController.dispose();
-    numeroController.dispose();
-    correoController.dispose();
-    super.dispose();
-  }
+  // Días seleccionados por el usuario
+  final Set<String> seleccionados = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Editar proveedor"),
+        title: const Text("Agregar Proveedor"),
         backgroundColor: Colors.indigo.shade700,
       ),
       body: Padding(
@@ -118,7 +89,6 @@ class _EditarProveedorPageState extends State<EditarProveedorPage> {
                   );
                 }).toList(),
               ),
-
               const SizedBox(height: 20),
 
               ElevatedButton(
@@ -127,12 +97,11 @@ class _EditarProveedorPageState extends State<EditarProveedorPage> {
                 ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // Unimos los días seleccionados en una cadena separada por comas
-                    final diasSeleccionados = seleccionados.join(', ');
+                    // Unir los días seleccionados en una sola cadena
+                    final diasSeleccionados = seleccionados.join(", ");
 
-                    await widget.db.update(widget.db.proveedores).replace(
+                    await widget.db.into(widget.db.proveedores).insert(
                       ProveedoresCompanion(
-                        id: drift.Value(widget.proveedor.id),
                         nombre: drift.Value(nombreController.text),
                         numero: drift.Value(numeroController.text),
                         correo: drift.Value(correoController.text),
@@ -140,10 +109,10 @@ class _EditarProveedorPageState extends State<EditarProveedorPage> {
                       ),
                     );
 
-                    Navigator.pop(context, true);
+                    Navigator.pop(context, true); // regresar al listado
                   }
                 },
-                child: const Text("Guardar cambios"),
+                child: const Text("Guardar"),
               ),
             ],
           ),
