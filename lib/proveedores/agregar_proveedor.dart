@@ -18,26 +18,54 @@ class _AgregarProveedorPageState extends State<AgregarProveedorPage> {
   final TextEditingController numeroController = TextEditingController();
   final TextEditingController correoController = TextEditingController();
 
-  // Lista de días de servicio disponibles
-  final List<String> dias = [
-    'Lunes',
-    'Martes',
-    'Miércoles',
-    'Jueves',
-    'Viernes',
-    'Sábado',
-    'Domingo'
-  ];
-
-  // Días seleccionados por el usuario
+  final List<String> dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   final Set<String> seleccionados = {};
+
+  // Widget reutilizable para los campos de texto
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        validator: validator,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: Colors.grey.shade600),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = Colors.indigo.shade700;
+    final Color backgroundColor = Colors.blueGrey.shade50;
+
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("Agregar Proveedor"),
-        backgroundColor: Colors.indigo.shade700,
+        backgroundColor: backgroundColor,
+        elevation: 0,
+        title: const Text('Agregar Proveedor', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black87)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        shape: Border(bottom: BorderSide(color: Colors.grey.shade300, width: 1)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,38 +73,44 @@ class _AgregarProveedorPageState extends State<AgregarProveedorPage> {
           key: _formKey,
           child: ListView(
             children: [
-              TextFormField(
+              _buildTextField(
                 controller: nombreController,
-                decoration: const InputDecoration(labelText: "Nombre"),
-                validator: (value) =>
-                value!.isEmpty ? "Ingrese un nombre" : null,
+                label: "Nombre del Proveedor",
+                icon: Icons.business_center_outlined,
+                validator: (value) => value!.isEmpty ? "Ingrese un nombre" : null,
               ),
-              TextFormField(
+              _buildTextField(
                 controller: numeroController,
-                decoration: const InputDecoration(labelText: "Número"),
+                label: "Número de Teléfono",
+                icon: Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
               ),
-              TextFormField(
+              _buildTextField(
                 controller: correoController,
-                decoration: const InputDecoration(labelText: "Correo"),
+                label: "Correo Electrónico",
+                icon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 20),
-
-              // --- Selector de días de servicio ---
               const Text(
                 "Días de servicio",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
               ),
+              const SizedBox(height: 8),
               Wrap(
-                spacing: 8,
+                spacing: 8.0,
+                runSpacing: 4.0,
                 children: dias.map((dia) {
-                  final seleccionado = seleccionados.contains(dia);
+                  final isSelected = seleccionados.contains(dia);
                   return FilterChip(
                     label: Text(dia),
-                    selected: seleccionado,
-                    selectedColor: Colors.indigo.shade100,
-                    checkmarkColor: Colors.indigo,
+                    selected: isSelected,
+                    selectedColor: primaryColor.withOpacity(0.2),
+                    checkmarkColor: primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      side: BorderSide(color: isSelected ? primaryColor : Colors.grey.shade400),
+                    ),
                     onSelected: (bool value) {
                       setState(() {
                         if (value) {
@@ -89,30 +123,35 @@ class _AgregarProveedorPageState extends State<AgregarProveedorPage> {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 20),
-
+              const SizedBox(height: 24),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.indigo.shade700,
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 2,
                 ),
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // Unir los días seleccionados en una sola cadena
                     final diasSeleccionados = seleccionados.join(", ");
 
                     await widget.db.into(widget.db.proveedores).insert(
-                      ProveedoresCompanion(
-                        nombre: drift.Value(nombreController.text),
-                        numero: drift.Value(numeroController.text),
-                        correo: drift.Value(correoController.text),
-                        diasServicio: drift.Value(diasSeleccionados),
-                      ),
-                    );
+                          ProveedoresCompanion(
+                            nombre: drift.Value(nombreController.text),
+                            numero: drift.Value(numeroController.text),
+                            correo: drift.Value(correoController.text),
+                            diasServicio: drift.Value(diasSeleccionados),
+                          ),
+                        );
 
-                    Navigator.pop(context, true); // regresar al listado
+                    Navigator.pop(context, true);
                   }
                 },
-                child: const Text("Guardar"),
+                child: const Text(
+                  "Guardar Proveedor",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),

@@ -1,45 +1,45 @@
-
-// Importaciones necesarias para la UI de Flutter, Drift para la base de datos, y la propia base de datos.
 import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' as drift;
+import 'compras_scanner_page.dart';
 import '../database/database.dart';
 
-// Define un StatefulWidget para la página de la factura de compras, que necesita manejar estado.
 class ComprasFacturaPage extends StatefulWidget {
-  // Instancia de la base de datos que se pasa desde la página anterior.
   final AppDatabase db;
 
-  // Constructor que requiere la instancia de la base de datos.
   const ComprasFacturaPage({super.key, required this.db});
 
   @override
   State<ComprasFacturaPage> createState() => _ComprasFacturaPageState();
 }
 
-// Clase que maneja el estado de ComprasFacturaPage.
 class _ComprasFacturaPageState extends State<ComprasFacturaPage> {
-  // Controladores para los campos de texto de código y cantidad.
   final TextEditingController codigoController = TextEditingController();
   final TextEditingController cantidadController = TextEditingController(text: '1');
 
-  // Listas para manejar los productos agregados a la factura actual.
   List<Producto> productosAgregados = [];
-  Map<int, int> cantidades = {}; // Mapa para asociar el ID del producto con su cantidad.
-
-  // Variable para almacenar el total de la compra.
+  Map<int, int> cantidades = {};
   double totalCompra = 0;
 
-  // --- Método para agregar un producto a la factura ---
+  Future<void> escanearCodigo() async {
+    final codigo = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const ComprasScannerPage()),
+    );
+
+    if (codigo != null && codigo.isNotEmpty) {
+      codigoController.text = codigo;
+      await agregarProducto();
+    }
+  }
+
   Future<void> agregarProducto() async {
     final codigo = codigoController.text.trim();
-    if (codigo.isEmpty) return; // Si no hay código, no hace nada.
+    if (codigo.isEmpty) return;
 
-    // Busca el producto en la base de datos usando el código de barras.
     final producto = await (widget.db.select(widget.db.productos)
-      ..where((tbl) => tbl.codigoBarras.equals(codigo)))
+          ..where((tbl) => tbl.codigoBarras.equals(codigo)))
         .getSingleOrNull();
 
-    // Si el producto no se encuentra, muestra un mensaje.
     if (producto == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Producto no encontrado")),
@@ -49,30 +49,24 @@ class _ComprasFacturaPageState extends State<ComprasFacturaPage> {
 
     final cantidad = int.tryParse(cantidadController.text) ?? 1;
 
-    // Actualiza el estado de la UI.
     setState(() {
-      // Si el producto ya está en la lista, solo suma la cantidad.
       if (cantidades.containsKey(producto.id)) {
         cantidades[producto.id] = (cantidades[producto.id]! + cantidad);
       } else {
-        // Si es un producto nuevo, lo agrega a la lista.
         productosAgregados.add(producto);
         cantidades[producto.id] = cantidad;
       }
-      // Recalcula el total de la compra.
       totalCompra += producto.precioCompra * cantidad;
     });
 
-    // Limpia los campos de texto para el siguiente producto.
     codigoController.clear();
     cantidadController.text = '1';
+    FocusScope.of(context).unfocus(); // Oculta el teclado
   }
 
-  // --- Método para finalizar y registrar la compra en la base de datos ---
   Future<void> finalizarCompra() async {
-    if (productosAgregados.isEmpty) return; // Si no hay productos, no hace nada.
+    if (productosAgregados.isEmpty) return;
 
-    // 1. Inserta el encabezado de la compra en la tabla `compras`.
     final compraId = await widget.db.into(widget.db.compras).insert(
       ComprasCompanion(
         fecha: drift.Value(DateTime.now()),
@@ -80,11 +74,9 @@ class _ComprasFacturaPageState extends State<ComprasFacturaPage> {
       ),
     );
 
-    // 2. Itera sobre los productos agregados para guardarlos en el detalle y actualizar el inventario.
     for (var p in productosAgregados) {
       final cantidad = cantidades[p.id]!;
 
-      // 2a. Inserta cada producto en la tabla `comprasDetalles` (CORREGIDO).
       await widget.db.into(widget.db.comprasDetalles).insert(
         ComprasDetallesCompanion(
           compraId: drift.Value(compraId),
@@ -94,9 +86,8 @@ class _ComprasFacturaPageState extends State<ComprasFacturaPage> {
         ),
       );
 
-      // 2b. Actualiza la cantidad de stock del producto en la tabla `productos`.
       await (widget.db.update(widget.db.productos)
-        ..where((tbl) => tbl.id.equals(p.id)))
+            ..where((tbl) => tbl.id.equals(p.id)))
           .write(
         ProductosCompanion(
           cantidad: drift.Value(p.cantidad + cantidad),
@@ -104,7 +95,6 @@ class _ComprasFacturaPageState extends State<ComprasFacturaPage> {
       );
     }
 
-    // Muestra un mensaje de confirmación y cierra la pantalla de factura.
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Compra registrada correctamente")),
     );
@@ -112,81 +102,133 @@ class _ComprasFacturaPageState extends State<ComprasFacturaPage> {
     Navigator.pop(context);
   }
 
-  // --- Construcción de la interfaz de usuario ---
   @override
   Widget build(BuildContext context) {
+    // --- CORRECCIÓN: Se cambia el color a indigo para consistencia ---
+    final Color primaryColor = Colors.indigo.shade700;
+    final Color backgroundColor = Colors.blueGrey.shade50;
+
     return Scaffold(
-      // Barra superior.
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("Nueva Compra"),
-        backgroundColor: Colors.indigo.shade700,
+        backgroundColor: backgroundColor,
+        elevation: 0,
+        title: const Text('Nueva Compra', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black87)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        shape: Border(bottom: BorderSide(color: Colors.grey.shade300, width: 1)),
       ),
-      // Cuerpo principal.
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // --- Sección de entrada para agregar productos ---
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: TextField(
-                    controller: codigoController,
-                    decoration: const InputDecoration(labelText: "Código de barras"),
-                    onSubmitted: (_) => agregarProducto(),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: TextField(
-                    controller: cantidadController,
-                    decoration: const InputDecoration(labelText: "Cant."),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add_box, color: Colors.indigo),
-                  onPressed: agregarProducto,
-                ),
-              ],
-            ),
+            _buildInputSection(primaryColor),
             const SizedBox(height: 20),
-            // --- Lista de productos agregados a la factura ---
-            Expanded(
-              child: ListView.builder(
-                itemCount: productosAgregados.length,
-                itemBuilder: (context, index) {
-                  final p = productosAgregados[index];
-                  final cantidad = cantidades[p.id]!;
-                  return ListTile(
-                    title: Text(p.nombre),
-                    subtitle: Text("Cantidad: $cantidad × \$${p.precioCompra}"),
-                    trailing: Text("\$${(p.precioCompra * cantidad).toStringAsFixed(2)}"),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 10),
-            // --- Total de la compra ---
-            Text(
-              "Total: \$${totalCompra.toStringAsFixed(2)}",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            const SizedBox(height: 10),
-            // --- Botón para finalizar la compra ---
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.indigo.shade700,
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              ),
-              icon: const Icon(Icons.check),
-              label: const Text("Finalizar Compra"),
-              onPressed: finalizarCompra,
-            )
+            _buildProductList(),
+            _buildTotalsSection(primaryColor),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInputSection(Color primaryColor) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Expanded(
+              child: TextField(
+                controller: codigoController,
+                decoration: const InputDecoration(labelText: "Código de Barras", border: InputBorder.none),
+                onSubmitted: (_) => agregarProducto(),
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.camera_alt_outlined, color: primaryColor, size: 30),
+              onPressed: escanearCodigo,
+            ),
+            const SizedBox(width: 10),
+            SizedBox(
+              width: 60,
+              child: TextField(
+                controller: cantidadController,
+                decoration: const InputDecoration(labelText: "Cant.", border: InputBorder.none),
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(width: 10),
+            ElevatedButton(
+              onPressed: agregarProducto,
+              style: ElevatedButton.styleFrom(backgroundColor: primaryColor, shape: const CircleBorder(), padding: const EdgeInsets.all(12)),
+              child: const Icon(Icons.add, color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProductList() {
+    return Expanded(
+      child: productosAgregados.isEmpty
+          ? const Center(child: Text('Aún no hay productos en la factura.', style: TextStyle(fontSize: 16, color: Colors.black54)))
+          : ListView.builder(
+              itemCount: productosAgregados.length,
+              itemBuilder: (context, index) {
+                final p = productosAgregados[index];
+                final cantidad = cantidades[p.id]!;
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 4.0),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  child: ListTile(
+                    leading: CircleAvatar(backgroundColor: Colors.grey.shade200, child: const Icon(Icons.shopping_basket_outlined, color: Colors.grey)),
+                    title: Text(p.nombre, style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text("Cantidad: $cantidad @ \$${p.precioCompra.toStringAsFixed(2)} c/u"),
+                    trailing: Text("\$${(p.precioCompra * cantidad).toStringAsFixed(2)}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+
+  Widget _buildTotalsSection(Color primaryColor) {
+    return Column(
+      children: [
+        const Divider(height: 24),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("TOTAL:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87)),
+              Text("\$${totalCompra.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: primaryColor)),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton.icon(
+            onPressed: finalizarCompra,
+            icon: const Icon(Icons.check_circle_outline, color: Colors.white),
+            label: const Text("Finalizar Compra", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

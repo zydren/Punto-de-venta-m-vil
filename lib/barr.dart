@@ -9,108 +9,77 @@ import 'database/database.dart' hide Proveedores;
 
 final AppDatabase db = AppDatabase();
 
-
-// Función que retorna la barra inferior
+// --- Barra de Navegación Inferior Rediseñada ---
 Widget bottomNavBar(BuildContext context, {required String currentPage}) {
-  return BottomAppBar(
-    color: Colors.indigo.shade700,
-    child: Row(
-      children: [
-        // --- Facturas ---
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              if (currentPage != "Facturas") {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Inicio()),
-                );
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.receipt_long, color: Colors.white),
-                Text("Facturas", style: TextStyle(color: Colors.white, fontSize: 12)),
-              ],
-            ),
-          ),
-        ),
 
-        VerticalDivider(width: 1, thickness: 1, color: Colors.white24),
+  // Mapea los nombres de las páginas a un índice para el BottomNavigationBar
+  final Map<String, int> pageIndices = {
+    "Inicio": 0, // Corregido: La primera página es "Inicio"
+    "Inventario": 1,
+    "Proveedores": 2,
+    "Compras": 3,
+  };
 
-        // --- Inventario ---
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              if (currentPage != "Inventario") {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Inventario()),
-                );
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.inventory, color: Colors.white),
-                Text("Inventario", style: TextStyle(color: Colors.white, fontSize: 12)),
-              ],
-            ),
-          ),
-        ),
+  final int currentIndex = pageIndices[currentPage] ?? 0;
 
-        VerticalDivider(width: 1, thickness: 1, color: Colors.white24),
+  // Navega a la página correcta al tocar un ítem
+  void _onItemTapped(int index) {
+    // Evita recargar la misma página
+    if (index == currentIndex) return;
 
-        // --- Proveedores ---
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              if (currentPage != "Proveedores") {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => Proveedores()),
-                );
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.local_shipping, color: Colors.white),
-                Text("Proveedores", style: TextStyle(color: Colors.white, fontSize: 12)),
-              ],
-            ),
-          ),
-        ),
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Inicio()));
+        break;
+      case 1:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Inventario()));
+        break;
+      case 2:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Proveedores()));
+        break;
+      case 3:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ComprasPage(db: db)));
+        break;
+    }
+  }
 
-        VerticalDivider(width: 1, thickness: 1, color: Colors.white24),
+  return BottomNavigationBar(
+    // --- Estilo Profesional ---
+    backgroundColor: Colors.white,
+    type: BottomNavigationBarType.fixed, // Mantiene el layout consistente
+    currentIndex: currentIndex,
+    onTap: _onItemTapped,
+    
+    // Colores que combinan con el resto del diseño
+    selectedItemColor: Colors.indigo.shade700,
+    unselectedItemColor: Colors.grey.shade600,
+    
+    // Estilo de texto sutil y limpio
+    selectedFontSize: 12.0,
+    unselectedFontSize: 12.0,
 
-        // --- Compras ---
-        Expanded(
-          child: InkWell(
-            onTap: () {
-              if (currentPage != "Compras") {
-
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => ComprasPage(db:db)),
-                );
-              }
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.shopping_cart, color: Colors.white),
-                Text("Compras", style: TextStyle(color: Colors.white, fontSize: 12)),
-              ],
-            ),
-          ),
-        ),
-      ],
-    ),
+    items: const <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        // Corregido: Icono y etiqueta para "Inicio"
+        activeIcon: Icon(Icons.home),
+        icon: Icon(Icons.home_outlined),
+        label: 'Inicio',
+      ),
+      BottomNavigationBarItem(
+        activeIcon: Icon(Icons.inventory),
+        icon: Icon(Icons.inventory_outlined),
+        label: 'Inventario',
+      ),
+      BottomNavigationBarItem(
+        activeIcon: Icon(Icons.local_shipping),
+        icon: Icon(Icons.local_shipping_outlined),
+        label: 'Proveedores',
+      ),
+      BottomNavigationBarItem(
+        activeIcon: Icon(Icons.shopping_cart),
+        icon: Icon(Icons.shopping_cart_outlined),
+        label: 'Compras',
+      ),
+    ],
   );
 }
