@@ -3,6 +3,7 @@ import 'barr.dart'; // Funcion de barra inferior e instancia de DB
 import 'ventas/ventas_page.dart';
 import 'ventas/ventas_reporte_page.dart';
 import 'estadisticas/estadisticas_page.dart'; // Importa la nueva página de estadísticas
+import 'chatbot/chatbot_page.dart'; // Importar el Chatbot
 
 class Inicio extends StatelessWidget {
   const Inicio({super.key});
@@ -35,6 +36,18 @@ class Inicio extends StatelessWidget {
           ),
         ),
         automaticallyImplyLeading: false,
+      ),
+      // --- NUEVO: Botón Flotante para acceder al Asistente ---
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChatbotPage(db: db)),
+          );
+        },
+        backgroundColor: Colors.indigo,
+        icon: const Icon(Icons.smart_toy_outlined, color: Colors.amberAccent),
+        label: const Text("Asistente Virtual", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
       ),
       body: SingleChildScrollView(
         child: Padding(
