@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../database/database.dart';
 import 'compras_factura_page.dart';
 import 'compras_reporte_page.dart';
-import '../barr.dart'; // Importar la barra de navegación
+import 'sugerencias_compra_page.dart'; // Importar la nueva página
+import '../barr.dart';
 
 class ComprasPage extends StatelessWidget {
   final AppDatabase db;
@@ -11,14 +12,13 @@ class ComprasPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Paleta de colores profesional y cohesiva
     final Color primaryColor = Colors.green.shade700;
     final Color secondaryColor = Colors.orange.shade700;
+    final Color tertiaryColor = Colors.blue.shade700;
     final Color backgroundColor = Colors.blueGrey.shade50;
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      // --- AppBar Rediseñada ---
       appBar: AppBar(
         backgroundColor: backgroundColor,
         elevation: 0,
@@ -54,12 +54,27 @@ class ComprasPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                "Registra nuevas facturas de compra o consulta el historial.",
+                "Registra facturas, consulta el historial o genera sugerencias.",
                 style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
               const SizedBox(height: 32),
 
-              // Tarjeta de Acción para "Iniciar Factura"
+              // --- NUEVO: Tarjeta de Acción para "Sugerencias de Compra" ---
+              _buildActionCard(
+                context: context,
+                icon: Icons.lightbulb_outline,
+                title: "Sugerencias de Compra",
+                subtitle: "Analiza las ventas para predecir qué productos reponer.",
+                color: tertiaryColor,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SugerenciasCompraPage(db: db)),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+
               _buildActionCard(
                 context: context,
                 icon: Icons.note_add_outlined,
@@ -75,7 +90,6 @@ class ComprasPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // Tarjeta de Acción para "Reporte de Compras"
               _buildActionCard(
                 context: context,
                 icon: Icons.history_edu_outlined,
@@ -97,7 +111,6 @@ class ComprasPage extends StatelessWidget {
     );
   }
 
-  // Widget reutilizable para crear las tarjetas de acción
   Widget _buildActionCard({
     required BuildContext context,
     required IconData icon,

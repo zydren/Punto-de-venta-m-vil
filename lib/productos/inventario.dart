@@ -4,6 +4,7 @@ import '../database/database.dart';
 import '../barr.dart';
 import 'agregar_producto.dart';
 import 'editar_producto.dart';
+import 'analisis_producto_page.dart'; // Importar la nueva página
 
 enum ProductSorting { porNombre, porCosto, porCantidad }
 
@@ -106,7 +107,6 @@ class _InventarioState extends State<Inventario> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      // --- APPBAR CON DISEÑO UNIFICADO ---
       appBar: AppBar(
         backgroundColor: backgroundColor,
         elevation: 0,
@@ -199,7 +199,6 @@ class _InventarioState extends State<Inventario> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                       child: ExpansionTile(
-                        // --- Se elimina el CircleAvatar que mostraba el icono ---
                         tilePadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
                         title: Text(producto.nombre, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
                         subtitle: Padding(
@@ -221,6 +220,18 @@ class _InventarioState extends State<Inventario> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
+                                    // --- NUEVO: Botón de Análisis ---
+                                    TextButton.icon(
+                                      icon: const Icon(Icons.analytics_outlined, color: Colors.purple, size: 20),
+                                      label: const Text('Analizar', style: TextStyle(color: Colors.purple)),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => AnalisisProductoPage(db: widget.db, producto: producto)),
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8),
                                     TextButton.icon(
                                       icon: const Icon(Icons.edit, color: Colors.blueAccent, size: 20),
                                       label: const Text('Editar', style: TextStyle(color: Colors.blueAccent)),
