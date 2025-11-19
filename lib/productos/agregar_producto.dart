@@ -17,7 +17,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController compraController = TextEditingController();
   final TextEditingController ventaController = TextEditingController();
-  final TextEditingController cantidadController = TextEditingController();
+  // Se elimina cantidadController
   final TextEditingController cbController = TextEditingController();
 
   List<Proveedore> _proveedores = [];
@@ -46,7 +46,6 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
     );
 
     if (codigo != null && codigo.isNotEmpty) {
-      // Actualiza el controlador del campo de texto con el código escaneado
       setState(() {
         cbController.text = codigo;
       });
@@ -152,13 +151,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                   },
                 ),
               ),
-              _buildTextField(
-                controller: cantidadController,
-                label: "Cantidad en Stock",
-                icon: Icons.inventory_2_outlined,
-                keyboardType: TextInputType.number,
-              ),
-              // --- MODIFICACIÓN: Campo de Código de Barras con botón de escáner ---
+              // Se eliminó el campo de texto de cantidad
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
@@ -181,7 +174,7 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                     ),
                     const SizedBox(width: 10),
                     Container(
-                      height: 50, // Para alinear la altura con el TextFormField
+                      height: 50,
                       child: IconButton(
                         icon: Icon(Icons.camera_alt_outlined, size: 30),
                         onPressed: _escanearCodigo,
@@ -209,7 +202,8 @@ class _AgregarProductoPageState extends State<AgregarProductoPage> {
                             precioCompra: drift.Value(double.tryParse(compraController.text) ?? 0),
                             precioVenta: drift.Value(double.tryParse(ventaController.text) ?? 0),
                             proveedor: drift.Value(_proveedorSeleccionado?.nombre),
-                            cantidad: drift.Value(int.tryParse(cantidadController.text) ?? 0),
+                            // Cantidad siempre es 0 al crear
+                            cantidad: const drift.Value(0), 
                             codigoBarras: drift.Value(cbController.text.isEmpty ? null : cbController.text),
                           ),
                         );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' as drift;
+import 'package:flutter_markdown/flutter_markdown.dart'; // Importar Markdown
 import '../database/database.dart';
+import '../services/gemini_service.dart'; // Importar el servicio de Gemini
 
 // --- Clase auxiliar para mantener los datos del análisis ---
 class ProductoSugerencia {
@@ -29,6 +31,8 @@ class SugerenciasCompraPage extends StatefulWidget {
 
 class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
   late Future<List<ProductoSugerencia>> _sugerenciasFuture;
+  final GeminiService _geminiService = GeminiService(); // Instancia del servicio
+  bool _isAnalyzing = false; // Estado de carga para la IA
 
   @override
   void initState() {
@@ -36,7 +40,7 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
     _sugerenciasFuture = _fetchSugerencias();
   }
 
-  // --- LÓGICA DE ANÁLISIS DE VENTAS (CORREGIDA Y ROBUSTA) ---
+  // --- LÓGICA DE ANÁLISIS DE VENTAS ---
   Future<List<ProductoSugerencia>> _fetchSugerencias() async {
     final db = widget.db;
     final treintaDiasAtras = DateTime.now().subtract(const Duration(days: 30));
@@ -69,7 +73,6 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
         final double diasRestantes = producto.cantidad / velocidadVenta;
 
         if (diasRestantes <= 15) {
-          // --- NUEVO: Cálculo de la cantidad a comprar ---
           const int diasDeStockDeseados = 30;
           final double cantidadACubrir = (diasDeStockDeseados - diasRestantes) * velocidadVenta;
           final int cantidadSugerida = cantidadACubrir.ceil();
@@ -79,7 +82,6 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
             vendidos30dias: vendidos,
             velocidadVenta: velocidadVenta,
             diasStockRestantes: diasRestantes,
-            // Se sugiere comprar al menos 1 unidad.
             cantidadSugerida: cantidadSugerida > 0 ? cantidadSugerida : 1,
           ));
         }
@@ -89,6 +91,66 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
     sugerencias.sort((a, b) => a.diasStockRestantes!.compareTo(b.diasStockRestantes!));
 
     return sugerencias;
+  }
+
+  // --- MÉTODO: Ejecutar Análisis con IA ---
+  Future<void> _ejecutarAnalisisIA(List<ProductoSugerencia> sugerencias) async {
+    setState(() {
+      _isAnalyzing = true;
+    });
+
+    // Mostrar diálogo de carga
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final resultado = await _geminiService.analizarInventario(sugerencias);
+
+    // Cerrar diálogo de carga
+    if (mounted) Navigator.pop(context);
+
+    setState(() {
+      _isAnalyzing = false;
+    });
+
+    // Mostrar resultado
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Row(
+            children: const [
+              Icon(Icons.auto_awesome, color: Colors.amber),
+              SizedBox(width: 8),
+              Text("Análisis Inteligente"),
+            ],
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 400, // Altura fija para el contenido scrolleable
+            child: Markdown( // VOLVEMOS A USAR MARKDOWN (tiene scroll interno optimizado)
+              data: resultado,
+              softLineBreak: true, // Forza el ajuste de línea
+              styleSheet: MarkdownStyleSheet(
+                h1: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.indigo),
+                h2: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                p: const TextStyle(fontSize: 14, color: Colors.black87, height: 1.3), // Fuente un poco más pequeña para evitar cortes
+                listBullet: const TextStyle(color: Colors.indigo),
+                tableBody: const TextStyle(fontSize: 12), // Ajuste por si la IA genera tablas
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cerrar", style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Color _getUrgencyColor(double? dias) {
@@ -124,10 +186,30 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
         elevation: 0,
         backgroundColor: backgroundColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: const Icon(Icons.arrow_back, color: Colors.indigo),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Sugerencias de Compra', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.black87)),
+        title: const Text(
+          'Sugerencias de Compra',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black87),
+        ),
+        shape: const Border(
+          bottom: BorderSide(color: Colors.indigo, width: 1.0),
+        ),
+      ),
+      // --- NUEVO: Botón Flotante para IA ---
+      floatingActionButton: FutureBuilder<List<ProductoSugerencia>>(
+        future: _sugerenciasFuture,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data!.isEmpty) return const SizedBox.shrink();
+          
+          return FloatingActionButton.extended(
+            onPressed: _isAnalyzing ? null : () => _ejecutarAnalisisIA(snapshot.data!),
+            backgroundColor: Colors.indigo,
+            icon: const Icon(Icons.auto_awesome, color: Colors.amberAccent),
+            label: const Text("Analizar con IA", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          );
+        },
       ),
       body: FutureBuilder<List<ProductoSugerencia>>(
         future: _sugerenciasFuture,
@@ -154,7 +236,7 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
           final sugerencias = snapshot.data!;
 
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+            padding: const EdgeInsets.fromLTRB(12.0, 8.0, 12.0, 80.0), // Padding extra abajo para el FAB
             itemCount: sugerencias.length,
             itemBuilder: (context, index) {
               final sug = sugerencias[index];
@@ -191,7 +273,6 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // --- NUEVO: Llamada a la acción para comprar ---
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                         decoration: BoxDecoration(
@@ -220,11 +301,10 @@ class _SugerenciasCompraPageState extends State<SugerenciasCompraPage> {
                       ),
                       const SizedBox(height: 16),
 
-                      // --- Datos de Soporte ---
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.04),
+                          color: Colors.indigo.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(8)
                         ),
                         child: Row(

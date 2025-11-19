@@ -113,8 +113,15 @@ class _AnalisisProductoPageState extends State<AnalisisProductoPage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: backgroundColor,
+        // --- DISEÑO UNIFICADO ---
+        shape: const Border(
+          bottom: BorderSide(
+            color: Colors.indigo,
+            width: 1,
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: const Icon(Icons.arrow_back, color: Colors.indigo), // Icono índigo
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text('Análisis: ${widget.producto.nombre}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87), overflow: TextOverflow.ellipsis),
@@ -227,7 +234,7 @@ class _AnalisisProductoPageState extends State<AnalisisProductoPage> {
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.indigo.withOpacity(0.05), // Fondo ligero índigo para consistencia
                         borderRadius: BorderRadius.circular(8)
                       ),
                       child: Row(

@@ -115,6 +115,12 @@ class _InventarioState extends State<Inventario> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black87),
         ),
         automaticallyImplyLeading: false,
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey.shade300,
+            width: 1.0,
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list, color: Colors.black87),
@@ -207,7 +213,7 @@ class _InventarioState extends State<Inventario> {
                         ),
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(24.0, 0, 24.0, 16.0),
+                            padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -217,13 +223,17 @@ class _InventarioState extends State<Inventario> {
                                 _buildDetailRow(Icons.business_center_outlined, "Proveedor", producto.proveedor ?? 'N/A'),
                                 _buildDetailRow(Icons.qr_code, "Código", producto.codigoBarras ?? 'N/A'),
                                 const SizedBox(height: 12),
+                                // --- CORRECCIÓN: Botones compactos en Row ---
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // --- NUEVO: Botón de Análisis ---
                                     TextButton.icon(
-                                      icon: const Icon(Icons.analytics_outlined, color: Colors.purple, size: 20),
-                                      label: const Text('Analizar', style: TextStyle(color: Colors.purple)),
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                        minimumSize: const Size(0, 36), // Tamaño mínimo reducido
+                                      ),
+                                      icon: const Icon(Icons.analytics_outlined, color: Colors.purple, size: 18),
+                                      label: const Text('Analizar', style: TextStyle(color: Colors.purple, fontSize: 13)),
                                       onPressed: () {
                                         Navigator.push(
                                           context,
@@ -231,10 +241,14 @@ class _InventarioState extends State<Inventario> {
                                         );
                                       },
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: 4),
                                     TextButton.icon(
-                                      icon: const Icon(Icons.edit, color: Colors.blueAccent, size: 20),
-                                      label: const Text('Editar', style: TextStyle(color: Colors.blueAccent)),
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                        minimumSize: const Size(0, 36),
+                                      ),
+                                      icon: const Icon(Icons.edit, color: Colors.blueAccent, size: 18),
+                                      label: const Text('Editar', style: TextStyle(color: Colors.blueAccent, fontSize: 13)),
                                       onPressed: () {
                                         Navigator.push(
                                           context,
@@ -242,10 +256,14 @@ class _InventarioState extends State<Inventario> {
                                         );
                                       },
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: 4),
                                     TextButton.icon(
-                                      icon: const Icon(Icons.delete, color: Colors.redAccent, size: 20),
-                                      label: const Text('Eliminar', style: TextStyle(color: Colors.redAccent)),
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                        minimumSize: const Size(0, 36),
+                                      ),
+                                      icon: const Icon(Icons.delete, color: Colors.redAccent, size: 18),
+                                      label: const Text('Eliminar', style: TextStyle(color: Colors.redAccent, fontSize: 13)),
                                       onPressed: () async {
                                         final confirm = await showDialog<bool>(
                                           context: context,

@@ -171,8 +171,8 @@ class _ProveedoresState extends State<Proveedores> {
         // --- AÑADIDO: Línea divisoria ---
         shape: const Border(
           bottom: BorderSide(
-            color: Colors.indigo,
-            width: 1.0,
+            color: Colors.grey,
+            width: .5,
           ),
         ),
         actions: [

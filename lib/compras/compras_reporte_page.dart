@@ -135,10 +135,11 @@ class _ComprasReportePageState extends State<ComprasReportePage> {
         elevation: 0,
         backgroundColor: backgroundColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          icon: const Icon(Icons.arrow_back, color: Colors.black), // Cambiado a indigo
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Reporte de Compras', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black87)),
+
         actions: [
           PopupMenuButton<ComprasSorting>(
             onSelected: _onSort,
@@ -156,13 +157,14 @@ class _ComprasReportePageState extends State<ComprasReportePage> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: Container(
-            color: Colors.green.shade100,
+            // Cambiado a tonos indigo
+            color: Colors.indigo.shade100, 
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(icon: Icon(Icons.chevron_left, color: Colors.green.shade800), onPressed: _goToPreviousMonth),
-                Text(DateFormat.yMMMM('es_MX').format(_currentDate), style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold, fontSize: 16)),
-                IconButton(icon: Icon(Icons.chevron_right, color: Colors.green.shade800), onPressed: _goToNextMonth),
+                IconButton(icon: Icon(Icons.chevron_left, color: Colors.indigo.shade800), onPressed: _goToPreviousMonth),
+                Text(DateFormat.yMMMM('es_MX').format(_currentDate), style: TextStyle(color: Colors.indigo.shade800, fontWeight: FontWeight.bold, fontSize: 16)),
+                IconButton(icon: Icon(Icons.chevron_right, color: Colors.indigo.shade800), onPressed: _goToNextMonth),
               ],
             ),
           ),
@@ -206,7 +208,7 @@ class _ComprasReportePageState extends State<ComprasReportePage> {
                       Text(proveedor?.nombre ?? 'Proveedor no especificado', style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black87)),
                       const SizedBox(height: 4),
                       // --- CORRECCIÓN: Se elimina el 'const' de TextStyle ---
-                      Text("Total: \$${compra.total.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.orange.shade800)),
+                      Text("Total: \$${compra.total.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.indigo.shade800)), // Cambiado a indigo
                       if (totalProductos > 0) Text("$totalProductos productos", style: const TextStyle(color: Colors.black54, fontSize: 13)),
                     ],
                   ),

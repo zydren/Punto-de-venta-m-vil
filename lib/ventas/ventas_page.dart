@@ -195,7 +195,7 @@ class _VentasPageState extends State<VentasPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text("TOTAL:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black87)),
-                  Text("\$${totalVenta.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.green.shade700)),
+                  Text("\$${totalVenta.toStringAsFixed(2)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.indigo.shade700)),
                 ],
               ),
             ),
@@ -207,7 +207,7 @@ class _VentasPageState extends State<VentasPage> {
                 icon: const Icon(Icons.check_circle_outline, color: Colors.white),
                 label: const Text("Finalizar Venta", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade600,
+                  backgroundColor: Colors.indigo.shade600,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),

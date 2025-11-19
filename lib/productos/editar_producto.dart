@@ -19,7 +19,7 @@ class _EditarProductoPageState extends State<EditarProductoPage> {
   late TextEditingController nombreController;
   late TextEditingController compraController;
   late TextEditingController ventaController;
-  late TextEditingController cantidadController;
+  // Se elimina cantidadController
   late TextEditingController cbController;
 
   List<Proveedore> _proveedores = [];
@@ -31,7 +31,7 @@ class _EditarProductoPageState extends State<EditarProductoPage> {
     nombreController = TextEditingController(text: widget.producto.nombre);
     compraController = TextEditingController(text: widget.producto.precioCompra.toString());
     ventaController = TextEditingController(text: widget.producto.precioVenta.toString());
-    cantidadController = TextEditingController(text: widget.producto.cantidad.toString());
+    // No inicializamos cantidadController
     cbController = TextEditingController(text: widget.producto.codigoBarras ?? '');
     
     _cargarYSeleccionarProveedor();
@@ -75,7 +75,7 @@ class _EditarProductoPageState extends State<EditarProductoPage> {
     nombreController.dispose();
     compraController.dispose();
     ventaController.dispose();
-    cantidadController.dispose();
+    // No disponemos cantidadController
     cbController.dispose();
     super.dispose();
   }
@@ -179,12 +179,7 @@ class _EditarProductoPageState extends State<EditarProductoPage> {
                   },
                 ),
               ),
-              _buildTextField(
-                controller: cantidadController,
-                label: "Cantidad en Stock",
-                icon: Icons.inventory_2_outlined,
-                keyboardType: TextInputType.number,
-              ),
+              // Se eliminó el campo de texto de cantidad
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
@@ -234,7 +229,7 @@ class _EditarProductoPageState extends State<EditarProductoPage> {
                       precioCompra: drift.Value(double.tryParse(compraController.text) ?? 0),
                       precioVenta: drift.Value(double.tryParse(ventaController.text) ?? 0),
                       proveedor: drift.Value(_proveedorSeleccionado?.nombre),
-                      cantidad: drift.Value(int.tryParse(cantidadController.text) ?? 0),
+                      // IMPORTANTE: NO actualizamos la cantidad, se mantiene la actual
                       codigoBarras: drift.Value(cbController.text.isEmpty ? null : cbController.text),
                     );
 
